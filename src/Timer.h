@@ -1,19 +1,40 @@
 #pragma once
 
-class TimerImpl;
+#include <chrono>
 
 class Timer
 {
 public:
-	Timer();
-	~Timer();
+	Timer()
+	{
+		reset();
+	}
 
-	void reset();
+	inline void reset()
+	{
+		m_Start = std::chrono::high_resolution_clock::now();
+	}
 
-	float seconds();
+	inline float nanoseconds()
+	{
+		return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_Start).count();		
+	}
 
-	float milliseconds();
+	inline float microseconds()
+	{
+		return nanoseconds() * 0.001f;
+	}
+
+	inline float milliseconds()
+	{
+		return nanoseconds() * 0.001f * 0.001f;
+	}
+
+	inline float seconds()
+	{
+		return nanoseconds() * 0.001f * 0.001f * 0.001f;
+	}
 
 private:
-	TimerImpl* _pImpl;
+	std::chrono::time_point<std::chrono::high_resolution_clock> m_Start;
 };

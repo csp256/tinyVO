@@ -25,11 +25,14 @@ class Image {
 	int const _height;
 	RGBA _garbage;
 
+	std::vector<Float> _depth;
+	Float _depth_garbage;
+
 	/**
 	 * This constructor can not be directly called by the user.
-	 * It will be called by the .
+	 * It will be called by the Image(std::string) constructor.
 	 * 
-	 * but is necessary for initializing constant member 
+	 * This is necessary for initializing constant member 
 	 * variables when loading from a file.
 	 */
 	Image(ImageInitializer file_data)
@@ -37,6 +40,7 @@ class Image {
 		, _height{file_data.height}
 	{
 		_data = std::move(file_data.data);
+		_depth.resize(_data.size(), std::numeric_limits<Float>::max());
 	}
 
 public:
@@ -53,6 +57,7 @@ public:
 		, _height{height}
 	{
 		_data.resize(_width * _height, px);
+		_depth.resize(_data.size(), std::numeric_limits<Float>::max());
 	}
 
 	inline int width() const { return _width; }
@@ -86,7 +91,7 @@ public:
 	inline int index(Lattice2 const& p) const { return p.x + p.y * _width; }
 
 	/**
-	 * g(x, y) will return a reference to the RGBA pixel
+	 * img({x, y}) will return a reference to the RGBA pixel
 	 * at that position if it is contained within the image.
 	 * 
 	 * If you try to access a pixel outside the image, it will
@@ -106,6 +111,22 @@ public:
 		return contains(p)
 			? _data[index(p)]
 			: _garbage;
+	}
+
+	/**
+	 * Main accessor for depth data
+	 */
+	inline Float & depth(Lattice2 const& p)
+	{
+		return contains(p)
+			? _depth[index(p)]
+			: _depth_garbage;
+	}
+	inline Float const& depth(Lattice2 const& p) const
+	{
+		return contains(p)
+			? _depth[index(p)]
+			: _depth_garbage;
 	}
 
 	/**

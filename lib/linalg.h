@@ -232,6 +232,8 @@ namespace linalg
         constexpr explicit          vec(const vec<U,2> & v)             : vec(static_cast<T>(v.x), static_cast<T>(v.y)) {}
         constexpr const T &         operator[] (int i) const            { return i==0?x:y; }
         LINALG_CONSTEXPR14 T &      operator[] (int i)                  { return i==0?x:y; }
+        vec<T,2>                    projected_onto(vec<T,2> const& v)   { return (dot(*this,v)/dot(v,v)) * v;}
+        vec<T,2>                    rejection_from(vec<T,2> const& v)   { return *this - this->projected_onto(v); }
 
         template<class U, class=detail::conv_t<vec,U>> constexpr vec(const U & u) : vec(converter<vec,U>{}(u)) {}
         template<class U, class=detail::conv_t<U,vec>> constexpr operator U () const { return converter<U,vec>{}(*this); }
@@ -255,6 +257,8 @@ namespace linalg
         LINALG_CONSTEXPR14 T &      operator[] (int i)                  { return i==0?x:i==1?y:z; }
         constexpr const vec<T,2> &  xy() const                          { return *reinterpret_cast<const vec<T,2> *>(this); }
         vec<T,2> &                  xy()                                { return *reinterpret_cast<vec<T,2> *>(this); }
+        vec<T,3>                    projected_onto(vec<T,3> const& v)   { return (dot(*this,v)/dot(v,v)) * v;}
+        vec<T,3>                    rejection_from(vec<T,3> const& v)   { return *this - this->projected_onto(v); }
 
         template<class U, class=detail::conv_t<vec,U>> constexpr vec(const U & u) : vec(converter<vec,U>{}(u)) {}
         template<class U, class=detail::conv_t<U,vec>> constexpr operator U () const { return converter<U,vec>{}(*this); }
@@ -282,6 +286,9 @@ namespace linalg
         constexpr const vec<T,3> &  xyz() const                         { return *reinterpret_cast<const vec<T,3> *>(this); }
         vec<T,2> &                  xy()                                { return *reinterpret_cast<vec<T,2> *>(this); }                
         vec<T,3> &                  xyz()                               { return *reinterpret_cast<vec<T,3> *>(this); }
+        vec<T,4>                    projected_onto(vec<T,4> const& v)   { return (dot(*this,v)/dot(v,v)) * v;}
+        vec<T,4>                    rejection_from(vec<T,4> const& v)   { return *this - this->projected_onto(v); }
+
 
         template<class U, class=detail::conv_t<vec,U>> constexpr vec(const U & u) : vec(converter<vec,U>{}(u)) {}
         template<class U, class=detail::conv_t<U,vec>> constexpr operator U () const { return converter<U,vec>{}(*this); }
@@ -590,7 +597,7 @@ namespace linalg
     template<class T> vec<T,4>   rotation_quat     (const vec<T,3> & axis, T angle)         { return {axis*std::sin(angle/2), std::cos(angle/2)}; }
     template<class T> vec<T,4>   rotation_quat     (const mat<T,3,3> & m);
     template<class T> mat<T,4,4> translation_matrix(const vec<T,3> & translation)           { return {{1,0,0,0},{0,1,0,0},{0,0,1,0},{translation,1}}; }
-    template<class T> mat<T,4,4> rotation_matrix   (const vec<T,4> & rotation)              { return {{qxdir(rotation),0}, {qydir(rotation),0}, {qzdir(rotation),0}, {0,0,0,1}}; }
+    // template<class T> mat<T,4,4> rotation_matrix   (const vec<T,4> & rotation)              { return {{qxdir(rotation),0}, {qydir(rotation),0}, {qzdir(rotation),0}, {0,0,0,1}}; }
     template<class T> mat<T,4,4> scaling_matrix    (const vec<T,3> & scaling)               { return {{scaling.x,0,0,0}, {0,scaling.y,0,0}, {0,0,scaling.z,0}, {0,0,0,1}}; }
     template<class T> mat<T,4,4> pose_matrix       (const vec<T,4> & q, const vec<T,3> & p) { return {{qxdir(q),0}, {qydir(q),0}, {qzdir(q),0}, {p,1}}; }
     template<class T> mat<T,4,4> lookat_matrix     (const vec<T,3> & eye, const vec<T,3> & center, const vec<T,3> & view_y_dir, fwd_axis fwd = fwd_axis::neg_z);
@@ -723,5 +730,7 @@ template<class T> linalg::mat<T,4,4> linalg::frustum_matrix(T x0, T x1, T y0, T 
     const T s = a == fwd_axis::pos_z ? T(1) : T(-1), o = z == z_range::neg_one_to_one ? n : 0;
     return {{2*n/(x1-x0),0,0,0}, {0,2*n/(y1-y0),0,0}, {-s*(x0+x1)/(x1-x0),-s*(y0+y1)/(y1-y0),s*(f+o)/(f-n),s}, {0,0,-(n+o)*f/(f-n),0}};
 }
+
+using namespace linalg::ostream_overloads;
 
 #endif

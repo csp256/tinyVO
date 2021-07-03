@@ -5,6 +5,7 @@ struct Projection {
 	double _aspect_ratio;
 	double _near;
 	double _far;
+	// You can ignore these two variables.
 	linalg::fwd_axis _forward_axis = linalg::fwd_axis::neg_z;
 	linalg::z_range _z_range = linalg::z_range::neg_one_to_one;
 

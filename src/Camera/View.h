@@ -5,7 +5,7 @@
 struct View {
 	Point3 _position;
 	Point3 _direction;
-	Point3 _up = Point3{0, 1, 0};
+	Point3 _up = Point3{0.0, 1.0, 0.0};
 
 	inline Matrix4 matrix() 
 	{

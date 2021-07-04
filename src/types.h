@@ -1,9 +1,11 @@
 #pragma once
 #include <lib/linalg.h>
 
+#include "color.h"
+
 using Float = double;
 
-using RGBA = linalg::vec<uint8_t, 4>;
+
 
 using Point2 = linalg::vec<Float, 2>;
 using Point3 = linalg::vec<Float, 3>;

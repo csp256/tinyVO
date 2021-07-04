@@ -4,8 +4,6 @@
 #include "Camera/View.h"
 #include "Camera/Projection.h"
 
-#include <optional>
-
 struct Camera {
 	View _view;
 	Projection _projection;
@@ -21,8 +19,8 @@ struct Camera {
 		auto q4 = mul(model_view_projection, p4);
 		auto w_inv = 1.0 / q4.w;
 		return {
-			q4.x * w_inv, 
-			q4.y * w_inv, 
+			q4.x * w_inv,
+			q4.y * w_inv,
 			q4.z * w_inv};
 	}
 };

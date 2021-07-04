@@ -6,8 +6,24 @@
 #include <iostream>
 #include <fstream>
 
+#include <cstring>
+
+std::vector<RGBA> Image::get_flipped() const
+{
+	std::vector<RGBA> out;
+	out.resize(_data.size());
+	for (int i = 0, j = _height - 1; i < _height; i++, j--) {
+		std::memcpy(out.data() + j*_width, // to
+					_data.data() + i*_width, // from
+					row_stride());
+	}
+	return out;
+}
+
 void Image::write_ppm(std::string const& filename) const
 {
+	auto data = get_flipped();
+
 	std::ofstream output(filename, std::ios::binary);
 
 	output << "P3\n";
@@ -17,7 +33,7 @@ void Image::write_ppm(std::string const& filename) const
 	int k = 0;
 	for (int y = 0; y < _height; y++) {
 		for (int x = 0; x < _width; x++) {
-			RGBA const& px = _data[k++];
+			RGBA const& px = data[k++];
 			output << px.r << " ";
 			output << px.g << " ";
 			output << px.b << " ";
@@ -29,9 +45,10 @@ void Image::write_ppm(std::string const& filename) const
 
 void Image::write_png(std::string const& filename) const
 {
-	const int channels = 4;
+	auto data = get_flipped();
+	constexpr int channels = 4;
 	const int row_stride = _width * channels;
-	stbi_write_png(filename.c_str(), _width, _height, channels, (const void *) _data.data(), row_stride);
+	stbi_write_png(filename.c_str(), _width, _height, channels, (const void *) data.data(), row_stride);
 }
 
 ImageInitializer read_png(std::string const& filename) 

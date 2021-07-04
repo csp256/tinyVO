@@ -149,6 +149,17 @@ public:
 		}
 	}
 
+	/**
+	 * Bytes per row
+	 */
+	inline size_t row_stride() const
+	{
+		constexpr size_t channels = 4;
+		return _width * channels;
+	}
+
+	std::vector<RGBA> get_flipped() const;
+
 	void write_ppm(std::string const& filename) const;
 
 	void write_png(std::string const& filename) const;

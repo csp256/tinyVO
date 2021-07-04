@@ -12,6 +12,9 @@ namespace {
 
 	using vec2 = linalg::vec<double, 2>;
 
+	/**
+	 * Used for testing (many) points if they are inside a single planar triangle. 
+	 */
 	class TriangleTester {
 		class LineTester {
 			vec2 const shift;
@@ -72,4 +75,24 @@ inline void draw_filled_triangle(std::array<Lattice2, 3> tri, Image & image, RGB
 			image(point) = color;
 		}
 	});
+}
+
+// 
+
+inline Point3 face_normal(std::array<Point4, 3> const& v)
+{
+	auto const p0 = v[0].xyz();
+	auto const q1 = v[1].xyz() - p0;
+	auto const q2 = v[2].xyz() - p0;
+	return cross(q1, q2);
+}
+
+inline Point3 unit_face_normal(std::array<Point4, 3> const& v)
+{
+	return normalize(face_normal(v));
+}
+
+inline bool is_backfacing(std::array<Point4, 3> const& v) 
+{
+	return face_normal(v).z < 0;
 }

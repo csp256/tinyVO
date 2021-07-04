@@ -29,8 +29,14 @@ try
 
     auto const red = RGBA{255,0,0,255};
     auto const green = RGBA{0,255,0,255};
-    // auto const blue = RGBA{0,0,255,255};
+    auto const blue = RGBA{0,0,255,255};
     auto const cyan = RGBA{0,255,255,255};
+
+    (void) red;
+    (void) green;
+    (void) blue;
+    (void) cyan;
+
 
     draw_filled_triangle(tri, image, red);
     draw_wire_triangle(tri, image, cyan);
@@ -40,20 +46,24 @@ try
 
     auto thing = Instance{};
     thing._obj = obj;
-    thing._model.rotation = Point3{0.0, 0.0, 3.14159};
+    thing._model.rotation = Point3{-0.4, 0.2, 0.0};
 
     auto offset = 300.0;
     auto scale = 250.0;
 
-    thing.for_each_triangle([&](std::array<Point4 const, 3>  p) -> void
+    thing.for_each_triangle({}, [&](std::array<Point4, 3> const p) -> void
         {
             auto const q = std::array<Lattice2,3>{
                 Lattice2{(int)(scale * p[0].x + offset), (int)(scale * p[0].y + offset)},
                 Lattice2{(int)(scale * p[1].x + offset), (int)(scale * p[1].y + offset)},
                 Lattice2{(int)(scale * p[2].x + offset), (int)(scale * p[2].y + offset)}};
 
-            // draw_filled_triangle(q, image, blue);
-            draw_wire_triangle(q, image, green);
+            auto const normal = unit_face_normal(p);
+            auto const s = 100 + (int)(100 * normal.z);
+            auto const shading = RGBA{ s, s, s, 255};
+
+            draw_filled_triangle(q, image, shading);
+            // draw_wire_triangle(q, image, green);
         });
 
     image.write_png("image.png");

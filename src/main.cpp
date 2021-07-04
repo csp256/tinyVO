@@ -63,7 +63,7 @@ try
             auto const shading = RGBA{ s, s, s, 255};
 
             draw_filled_triangle(q, image, shading);
-            // draw_wire_triangle(q, image, green);
+            draw_wire_triangle(q, image, green);
         });
 
     image.write_png("image.png");

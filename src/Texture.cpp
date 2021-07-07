@@ -1,14 +1,25 @@
-#include "Image.h"
+#include "Texture.h"
 
+#include "Utility.h"
+
+#include <lib/json.h>
 #include <lib/stb_image_write.h>
 #include <lib/stb_image.h>
 
-#include <iostream>
 #include <fstream>
-
 #include <cstring>
 
-std::vector<RGBA> Image::get_flipped() const
+Texture::Texture(JSON const& j)
+	: _width{ j.at("width").get<int>() }
+	, _height{ j.at("height").get<int>() }
+	, _filename{ j.at("filename").get<std::string>() }
+{
+	_data.resize(_width * _height);
+	_depth.resize(_data.size(), std::numeric_limits<Float>::max());
+	this->fill( get_point4(j.value("default", std::vector<float>{0,0,0,1})) );
+}
+
+std::vector<RGBA> Texture::get_flipped() const
 {
 	std::vector<RGBA> out;
 	out.resize(_data.size());
@@ -20,7 +31,7 @@ std::vector<RGBA> Image::get_flipped() const
 	return out;
 }
 
-void Image::write_ppm(std::string const& filename) const
+void Texture::write_ppm(std::string const& filename) const
 {
 	auto data = get_flipped();
 
@@ -43,17 +54,22 @@ void Image::write_ppm(std::string const& filename) const
 	}
 }
 
-void Image::write_png(std::string const& filename) const
+void Texture::write_hdr(/*std::string const& filename*/) const
 {
-	auto data = get_flipped();
+	stbi_flip_vertically_on_write(1);
 	constexpr int channels = 4;
-	const int row_stride = _width * channels;
-	stbi_write_png(filename.c_str(), _width, _height, channels, (const void *) data.data(), row_stride);
+	// const int row_stride = _width * channels;
+	stbi_write_hdr(
+				_filename.c_str(), 
+				_width, 
+				_height, 
+				channels, 
+				(float const *) _data.data());
 }
 
-ImageInitializer read_png(std::string const& filename) 
+TextureInitializer read_png(std::string const& filename) 
 {
-	ImageInitializer out;
+	TextureInitializer out;
 	int channels_in_file; // unused
 
 	uint8_t* u8_ptr = stbi_load(filename.c_str(), &out.width, &out.height, &channels_in_file, STBI_rgb_alpha);

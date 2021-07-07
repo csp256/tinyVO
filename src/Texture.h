@@ -10,16 +10,16 @@
 // Necessary to let you load a PNG like:
 //     auto img = Grid("file.png");
 // with constant member variables 
-struct ImageInitializer {
+struct TextureInitializer {
 	std::vector<RGBA> data;
 	int width, height;
 };
-ImageInitializer read_png(std::string const& filename);
+TextureInitializer read_png(std::string const& filename);
 
 /**
  * Primary class for storing RGBA images.
  */
-class Image {
+class Texture {
 	std::vector<RGBA> _data;
 	int const _width;
 	int const _height;
@@ -28,6 +28,8 @@ class Image {
 	std::vector<Float> _depth;
 	Float _depth_garbage;
 
+	std::string const _filename;
+
 	/**
 	 * This constructor can not be directly called by the user.
 	 * It will be called by the Image(std::string) constructor.
@@ -35,7 +37,7 @@ class Image {
 	 * This is necessary for initializing constant member 
 	 * variables when loading from a file.
 	 */
-	Image(ImageInitializer file_data)
+	Texture(TextureInitializer file_data)
 		: _width{file_data.width}
 		, _height{file_data.height}
 	{
@@ -47,18 +49,20 @@ public:
 	/**
 	 * Constructs an Image from a file.
 	 */
-	Image(std::string const& filename) : Image(read_png(filename)) {}
+	Texture(std::string const& filename) : Texture(read_png(filename)) {}
 
 	/**
 	 * Constructs image with a single color.
 	 */
-	Image(int width, int height, RGBA px = {0,0,0,255})
+	Texture(int width, int height, RGBA px = {0,0,0,1})
 		: _width{width}
 		, _height{height}
 	{
 		_data.resize(_width * _height, px);
 		_depth.resize(_data.size(), std::numeric_limits<Float>::max());
 	}
+
+	Texture(JSON const& j);
 
 	inline int width() const { return _width; }
 	inline int height() const { return _height; }
@@ -162,5 +166,5 @@ public:
 
 	void write_ppm(std::string const& filename) const;
 
-	void write_png(std::string const& filename) const;
+	void write_hdr(/*std::string const& filename*/) const;
 };

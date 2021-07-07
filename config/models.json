@@ -1,0 +1,12 @@
+{
+	"models": [
+		{
+			"name": "head",
+			"path": "models/head/african_head.obj"
+		},
+		{
+			"name": "head2",
+			"path": "models/head2/head.obj"
+		}
+	]
+}

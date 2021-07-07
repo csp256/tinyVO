@@ -1,11 +1,10 @@
 #pragma once
 #include <lib/linalg.h>
+#include <lib/json_fwd.h>
 
 #include "color.h"
 
-using Float = double;
-
-
+using Float = float; // note, there is a define in tiny_obj_loader that needs to be changed too
 
 using Point2 = linalg::vec<Float, 2>;
 using Point3 = linalg::vec<Float, 3>;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "types.h"
 #include <lib/tiny_obj_loader.h>
 
 #include <iostream>
@@ -18,12 +19,6 @@ using OBJ = tinyobj::ObjReader;
 
 // *************************
 
-inline Shared<OBJ> load_OBJ(std::string const& filename)
-{
-	auto obj = CreateShared<OBJ>();
-	auto valid = obj->ParseFromFile(filename);
-	if (not valid) {
-		throw std::runtime_error("Failed to load OBJ");
-	}
-	return obj;
-}
+Shared<OBJ> model_library(std::string const& name);
+
+void initialize_model_library(JSON const& config);

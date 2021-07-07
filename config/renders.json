@@ -1,0 +1,23 @@
+{
+	"renders": [
+		{
+			"scene": "head",
+			"image": {
+				"width": 800,
+				"height": 600,
+				"filename": "head.hdr"
+			},
+			"view": {
+				"position": [0, 0, 0],
+				"target": [0, 0, 1],
+				"up": [0, 1, 0]
+			},
+			"projection": {
+				"field_of_view_y": 45.0,
+				"aspect_ratio": 1.0,
+				"near_plane": 0.1,
+				"far_plane": 100.0
+			}
+		}
+	]
+}

@@ -1,4 +1,4 @@
 #pragma once
 
-using RGBA = linalg::vec<uint8_t, 4>;
+using RGBA = linalg::vec<float, 4>;
 

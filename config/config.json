@@ -1,0 +1,6 @@
+{
+	"models": "config/models.json",
+	"scenes": "config/scenes.json",
+	"renders": "config/renders.json",
+	"worker_threads": 8
+}

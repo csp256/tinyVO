@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 // Bresenham's algorithm
-void draw_line(Lattice2 p0, Lattice2 p1, Image & image, RGBA color) 
+void draw_line(Lattice2 p0, Lattice2 p1, Texture & image, RGBA color) 
 {
     int x0 = p0.x;
     int y0 = p0.y;

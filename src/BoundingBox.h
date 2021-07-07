@@ -30,7 +30,7 @@ public:
 		return *this;
 	}
 
-	inline auto& clip_within(Image const& image)
+	inline auto& clip_within(Texture const& image)
 	{
 		_lo.x = std::clamp(_lo.x, 0, image.width() - 1);
 		_lo.y = std::clamp(_lo.y, 0, image.height() - 1);

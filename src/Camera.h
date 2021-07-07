@@ -1,8 +1,8 @@
 #pragma once
 #include "types.h"
 
-#include "Camera/View.h"
-#include "Camera/Projection.h"
+#include "Transforms/View.h"
+#include "Transforms/Projection.h"
 
 struct Camera {
 	View _view;

@@ -34,7 +34,7 @@ void initialize_model_library(JSON const& config)
                      return load_OBJ(path);
               };
        auto config_vector = config["models"].get<std::vector<JSON>>();
-       auto results = parallel<Shared<OBJ>>(load_OBJ_from_json, config_vector);
+       auto results = parallel(load_OBJ_from_json, config_vector);
 
        ModelLibrary models;
        for (size_t i = 0; i < results.size(); i++) {

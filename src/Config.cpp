@@ -35,7 +35,7 @@ void read_config(int const argc, char * argv[])
 			return load_json(config[name].get<std::string>());
 		};
 	auto names = std::vector<std::string>{ "models", "scenes", "renders" };
-	auto results = parallel<JSON>(load_json_from_name, names);
+	auto results = parallel(load_json_from_name, names);
 
 	// Models
 

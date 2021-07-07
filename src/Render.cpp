@@ -17,8 +17,6 @@ void perform_all_renders(JSON const& j)
 
 	auto const& render_config = j.at("renders").get<std::vector<JSON>>();
 	for (auto& j : render_config) {
-		std::cout << "a" << std::endl;
 		Render render{ j };
-		std::cout << "b" << std::endl;
 	}
 }
